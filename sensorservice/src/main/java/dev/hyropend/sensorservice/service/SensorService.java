@@ -10,6 +10,7 @@ import dev.hyropend.sensorservice.exception.DuplicateSensorException;
 import dev.hyropend.sensorservice.exception.FacilityNotFoundException;
 import dev.hyropend.sensorservice.repository.FacilityRepository;
 import dev.hyropend.sensorservice.repository.SensorRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,9 @@ public class SensorService {
 
     private final SensorRepository repository;
     private final FacilityRepository facilityRepository;
+    private final AuditService auditService;
 
+    @Transactional
     public SensorResponse createSensor(CreateSensorRequest request){
         if(repository.existsBySerialNumber(request.serialNumber())){
             throw new DuplicateSensorException(request.serialNumber());
@@ -37,6 +40,8 @@ public class SensorService {
         sensor.setFacility(facility);
 
         Sensor saved = repository.save(sensor);
+        auditService.log("SENSOR_CREATED: " + saved.getSerialNumber());
+        //throw new RuntimeException("test: kayıttan sonra patlama");
         return toResponse(saved);
     }
 
