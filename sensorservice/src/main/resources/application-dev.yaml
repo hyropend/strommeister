@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/strommeister
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:dev}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

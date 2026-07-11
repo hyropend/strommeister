@@ -1,11 +1,13 @@
 spring:
   application:
     name: sensorservice
-  datasource:
-    url: jdbc:postgresql://localhost:5432/strommeister
-    username: postgres
-    password: dev
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+  profiles:
+    active: dev
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/strommeister
+#    username: postgres
+#    password: dev
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
