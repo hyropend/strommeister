@@ -54,7 +54,7 @@ public class SensorService {
                 .stream()
                 .map(this::toResponse)
                 .toList(); */
-        return repository.findAllWithFacility()   // findAll() yerine
+        return repository.findAllWithFacility()
                 .stream().map(this::toResponse).toList();
     }
 }

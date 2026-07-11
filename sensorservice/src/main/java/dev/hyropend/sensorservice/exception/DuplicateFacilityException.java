@@ -1,7 +1,7 @@
 package dev.hyropend.sensorservice.exception;
 
-public class DuplicateFacilityException extends RuntimeException {
+public class DuplicateFacilityException extends DuplicateResourceException {
     public DuplicateFacilityException(String name) {
-        super("Facility with that name '" + name + "' already exists");
+        super("Facility with name '" + name + "' already exists");
     }
 }
