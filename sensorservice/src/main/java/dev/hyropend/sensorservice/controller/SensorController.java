@@ -31,4 +31,9 @@ public class SensorController {
         //return ResponseEntity.ok(sensors);
         return service.getAllSensors();
     }
+
+    @GetMapping("/slow")
+    public List<SensorResponse> slow() throws InterruptedException {
+        return service.slowGetAll();
+    }
 }

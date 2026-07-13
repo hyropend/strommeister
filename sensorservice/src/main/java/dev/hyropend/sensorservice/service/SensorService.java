@@ -62,4 +62,10 @@ public class SensorService {
         return repository.findAllWithFacility()
                 .stream().map(this::toResponse).toList();
     }
+
+    @Transactional
+    public List<SensorResponse> slowGetAll() throws InterruptedException {
+        Thread.sleep(5000);
+        return repository.findAllWithFacility().stream().map(this::toResponse).toList();
+    }
 }
