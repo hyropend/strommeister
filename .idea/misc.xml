@@ -5,6 +5,8 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/sensorservice/pom.xml" />
+        <option value="$PROJECT_DIR$/sensor-simulator/pom.xml" />
+        <option value="$PROJECT_DIR$/ingestion-service/pom.xml" />
       </list>
     </option>
   </component>

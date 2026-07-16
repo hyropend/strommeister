@@ -20,7 +20,8 @@ public class ReadingProducer {
     //private final Random random;
     private final Random random = new Random();
 
-    private static final List<String> SENSOR_IDS = List.of("SN-001", "SN-002", "SN-003", "SN-004");
+    private static final List<String> SENSOR_IDS = List.of("SN-001", "SN-002", "SN-003", "SN-004",
+            "SN-005", "SN-006","SN-007","SN-008");
 
     @Scheduled(fixedRate = 3000)
     public void ProduceReadings(){
