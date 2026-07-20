@@ -1,15 +1,19 @@
 services:
   kafka:
     image: apache/kafka:3.9.0
+    networks:
+      - energy-net
     container_name: kafka
     ports:
-      - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
-      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
@@ -21,6 +25,8 @@ services:
 
   postgres:
     image: postgres:16
+    networks:
+      - energy-net
     container_name: pg
     ports:
       - "5432:5432"
@@ -30,6 +36,55 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+
+  sensorservice:
+    build:
+      context: ./sensorservice
+      dockerfile: Dockerfile
+    container_name: sensor-service
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://pg:5432/strommeister
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=dev
+    depends_on:
+      - postgres
+    networks:
+      - energy-net
+
+
+  sensorsimulator:
+    build:
+      context: ./sensor-simulator
+      dockerfile: Dockerfile
+    container_name: sensor-simulator
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+      - kafka
+    networks:
+      - energy-net
+
+  ingestionservice:
+    build:
+      context: ./ingestion-service
+      dockerfile: Dockerfile
+    container_name: ingestion-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+      - kafka
+    networks:
+      - energy-net
+
+
 volumes:
   pgdata:
   kafka_data:
+
+networks:
+  energy-net:
+    name: energy-net
