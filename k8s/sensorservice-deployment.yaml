@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sensorservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sensorservice
+  template:
+    metadata:
+      labels:
+        app: sensorservice
+    spec:
+      containers:
+        - name: sensorservice
+          image: strommeister-sensorservice:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://host.minikube.internal:5432/strommeister
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: dev
